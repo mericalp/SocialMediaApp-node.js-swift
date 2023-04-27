@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const tweetSchema = new mongoose.Schema({
+const postsSchema = new mongoose.Schema({
     text: {
         type: String,
         required: true,
@@ -31,5 +31,5 @@ const tweetSchema = new mongoose.Schema({
     timestamps: true
 })
 
-const Tweet = mongoose.model('Tweet', tweetSchema)
-module.exports = Tweet
+const Posts = mongoose.model('Posts', postsSchema)
+module.exports = Posts
