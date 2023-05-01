@@ -75,6 +75,19 @@ userSchema.virtual('posts',{
     foreignField: 'user'
 })
 
+userSchema.virtual('notificationSent',{
+    ref: 'Notification',
+    localField: '_id',
+    foreignField: 'notSenderId'
+})
+
+
+userSchema.virtual('notificationReceived',{
+    ref: 'Notification',
+    localField: '_id',
+    foreignField: 'notReceiverId'
+})
+
 // Delete Password
 userSchema.methods.toJSON = function() { 
     const user = this

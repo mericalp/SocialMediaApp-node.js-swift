@@ -31,5 +31,17 @@ const postsSchema = new mongoose.Schema({
     timestamps: true
 })
 
+
+postsSchema.methods.toJSON = function () {
+    const post = this
+    const postObject = post.toObject()
+
+    if (postObject.image) {
+        postObject.image = "true"
+    }
+
+    return tweetObject
+}
+
 const Posts = mongoose.model('Posts', postsSchema)
 module.exports = Posts
