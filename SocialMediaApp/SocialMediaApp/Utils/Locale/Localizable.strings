@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  SocialMediaApp
+
+  Created by Meric Alp on 1.05.2023.
+  
+*/
+
+"signInFacebook" = "Sign In with Facebook";
+"signInGoogle" = "Sign In with Google";
+"signInApple" = "Sign In with Apple";
+"signupWithEmail" = "Sign Up with Email";
+

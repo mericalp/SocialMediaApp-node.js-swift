@@ -11,7 +11,10 @@ import SwiftUI
 struct SocialMediaAppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationView {
+               ContentView()
+            }
+            .navigationViewStyle(.stack)
         }
     }
 }
