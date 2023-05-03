@@ -33,6 +33,7 @@ extension Color {
     public static var peach: Color { Color("peach") }
     public static var grad1: Color { Color("grad1") }
     public static var grad2: Color { Color("grad2") }
+    public static var red: Color { Color("red") }
 }
 
 extension LinearGradient {

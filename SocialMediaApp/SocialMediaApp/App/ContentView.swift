@@ -9,14 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var viewModel = AuthViewModel()
-
+    
     var body: some View {
         if viewModel.isAuthenticated {
             if let user = viewModel.currentUser {
-                HomeView()
+                MainView(user: user)
             }
-        }
-        else {
+        } else {
             WelcomeView()
         }
     }
