@@ -25,6 +25,14 @@ struct TabBar: View {
                         .tabItem {
                             Image(systemName: "house")
                         }.tag(0)
+                    ProfileView(viewModel: ProfileViewModel(user: user), user: user)
+                        .onTapGesture {
+                            selectedIndex = 1
+                        }.navigationBarHidden(true)
+                        .navigationBarTitle("")
+                        .tabItem {
+                            Image(systemName: "person")
+                        }.tag(1)
                 }
                 .accentColor(Color.peach)
                 .edgesIgnoringSafeArea(.top)
