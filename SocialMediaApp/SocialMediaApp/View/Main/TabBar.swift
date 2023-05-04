@@ -17,7 +17,7 @@ struct TabBar: View {
         VStack {
             ZStack {
                 TabView {
-                    HomeView()
+                    HomeView(user: user)
                         .onTapGesture {
                             selectedIndex = 0
                         }.navigationBarHidden(true)
