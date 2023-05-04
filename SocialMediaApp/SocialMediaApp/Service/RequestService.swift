@@ -45,4 +45,23 @@ public class RequestService {
         task.resume()
     }
     
+    static func fetchData (completion: @escaping (_ result: Result<Data?,NetworkError>) -> Void) {
+        let url = URL(string: requestDomain)!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        let task = session.dataTask(with: request) { data, response, err in
+            guard err == nil else { return }
+            guard let data = data else { return }
+            completion(.success(data))
+        }
+        task.resume()
+    }
+    
+    
+    
 }
