@@ -88,7 +88,6 @@ struct LoginBodyView: View {
                     .padding()
                     .background(LinearGradient.linerGradient)
                     .cornerRadius(12)
-//                    .disabled(!authManager.authIsEnabled)
                 }
                 .buttonStyle(.bordered)
                 

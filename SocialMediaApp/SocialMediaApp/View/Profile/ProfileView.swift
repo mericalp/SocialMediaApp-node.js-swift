@@ -200,6 +200,16 @@ struct ProfileView: View {
                                                 .stroke(Color.black, lineWidth: 1.5)
                                         )
                                 }
+                                .onAppear {
+                                    print("called")
+                                    KingfisherManager.shared.cache.clearCache()
+                                }
+                                .sheet(isPresented: $editProfileShow, onDismiss: {
+                                    KingfisherManager.shared.cache.clearCache()
+                                    AuthViewModel.shared.fetchUser(userId: viewModel.user.id)
+                                }, content: {
+                                    EditProfileView(user: $viewModel.user)
+                                })
                             }
                         }
                         .padding(.leading, 8)

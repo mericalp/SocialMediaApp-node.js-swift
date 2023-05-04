@@ -16,7 +16,8 @@ class PostsContentViewModel: ObservableObject {
         RequestService.postContent(text: text, user: user.name, username: user.username, userId: user.id) { result in
             if let image = image {
                 if let id = result?["_id"]! {
-
+                    ImageUploader.uploadImage(paramName: "upload", fileName: "image1", image: image, urlPath: "/uploadPostImage/\(id)")
+                    print("/uploadPostImage/\(id)")
                 }
             }
         }

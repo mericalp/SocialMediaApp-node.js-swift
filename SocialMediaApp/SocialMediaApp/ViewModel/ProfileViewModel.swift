@@ -5,7 +5,7 @@
 //  Created by Meric Alp on 4.05.2023.
 //
 
-import Foundation
+import SwiftUI
 
 class ProfileViewModel: ObservableObject {
     @Published var posts = [Post]()
@@ -33,7 +33,12 @@ class ProfileViewModel: ObservableObject {
         }
     }
     
-    
+    func uploadProfileImage(text: String, image: UIImage?) {
+        guard let user = AuthViewModel.shared.currentUser else { return }
+        if let image = image {
+            ImageUploader.uploadImage(paramName: "avatar", fileName: "image1", image: image, urlPath: "/users/me/avatar")
+        }
+    }
     
     
 }
