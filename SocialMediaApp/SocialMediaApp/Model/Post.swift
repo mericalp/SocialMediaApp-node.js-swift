@@ -18,6 +18,6 @@ struct Post: Identifiable, Decodable {
     }
     let image: String?
     var likes : [String]
-    var didLike: Bool? = false
+    var didClap: Bool? = false
 }
 

@@ -34,6 +34,10 @@
 		560FC4E129FFFE5B005A8C51 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560FC4E029FFFE5B005A8C51 /* AuthViewModel.swift */; };
 		560FC4E329FFFE6E005A8C51 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560FC4E229FFFE6E005A8C51 /* User.swift */; };
 		560FC4E629FFFEA5005A8C51 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560FC4E529FFFEA5005A8C51 /* AuthService.swift */; };
+		564872262A052212004DE00E /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564872252A052212004DE00E /* Notification.swift */; };
+		564872282A052239004DE00E /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564872272A052239004DE00E /* NotificationViewModel.swift */; };
+		5648722B2A0522F2004DE00E /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5648722A2A0522F2004DE00E /* NotificationView.swift */; };
+		5648722D2A0522FA004DE00E /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5648722C2A0522FA004DE00E /* NotificationCell.swift */; };
 		564C30332A0413AF001B785E /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564C30322A0413AF001B785E /* ProfileViewModel.swift */; };
 		564C30352A04144B001B785E /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564C30342A04144B001B785E /* BlurView.swift */; };
 		564C30372A041506001B785E /* TabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564C30362A041506001B785E /* TabButton.swift */; };
@@ -85,6 +89,10 @@
 		560FC4E029FFFE5B005A8C51 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		560FC4E229FFFE6E005A8C51 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		560FC4E529FFFEA5005A8C51 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		564872252A052212004DE00E /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		564872272A052239004DE00E /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
+		5648722A2A0522F2004DE00E /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		5648722C2A0522FA004DE00E /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		564C30322A0413AF001B785E /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		564C30342A04144B001B785E /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
 		564C30362A041506001B785E /* TabButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabButton.swift; sourceTree = "<group>"; };
@@ -162,6 +170,7 @@
 		560FC49C29FFCDD5005A8C51 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				564872292A0522E4004DE00E /* Notification */,
 				56BA28BE2A03F91C0030708F /* Profile */,
 				5680BDD32A014FE0003C034B /* Post */,
 				5680BDD02A014F9A003C034B /* Main */,
@@ -182,6 +191,7 @@
 				568027C32A03954E00269455 /* HomeViewModel.swift */,
 				564C30322A0413AF001B785E /* ProfileViewModel.swift */,
 				564C30382A042319001B785E /* EditProfileViewModel.swift */,
+				564872272A052239004DE00E /* NotificationViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -191,6 +201,7 @@
 			children = (
 				560FC4E229FFFE6E005A8C51 /* User.swift */,
 				568027C52A03956E00269455 /* Post.swift */,
+				564872252A052212004DE00E /* Notification.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -327,6 +338,15 @@
 			path = Service;
 			sourceTree = "<group>";
 		};
+		564872292A0522E4004DE00E /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				5648722A2A0522F2004DE00E /* NotificationView.swift */,
+				5648722C2A0522FA004DE00E /* NotificationCell.swift */,
+			);
+			path = Notification;
+			sourceTree = "<group>";
+		};
 		5680BDD02A014F9A003C034B /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -459,11 +479,13 @@
 				560FC4C529FFD19F005A8C51 /* Facebook.swift in Sources */,
 				564C303B2A0423CF001B785E /* EditProfileView.swift in Sources */,
 				560FC4E629FFFEA5005A8C51 /* AuthService.swift in Sources */,
+				5648722D2A0522FA004DE00E /* NotificationCell.swift in Sources */,
 				568027C62A03956E00269455 /* Post.swift in Sources */,
 				56BA28C02A03F9270030708F /* ProfileView.swift in Sources */,
 				560AF8D229F91E0C00F6B151 /* ContentView.swift in Sources */,
 				568027C02A037DA300269455 /* RefreshableScrollView.swift in Sources */,
 				5680BDCD2A014ABE003C034B /* PostsContentViewModel.swift in Sources */,
+				564872282A052239004DE00E /* NotificationViewModel.swift in Sources */,
 				560FC4E129FFFE5B005A8C51 /* AuthViewModel.swift in Sources */,
 				560FC4B729FFCFF4005A8C51 /* Page.swift in Sources */,
 				560FC4AF29FFCFB2005A8C51 /* Font.swift in Sources */,
@@ -480,12 +502,14 @@
 				560FC4C729FFD1A4005A8C51 /* Google.swift in Sources */,
 				560FC4CB29FFD1AE005A8C51 /* Email.swift in Sources */,
 				564C30332A0413AF001B785E /* ProfileViewModel.swift in Sources */,
+				564872262A052212004DE00E /* Notification.swift in Sources */,
 				564C30372A041506001B785E /* TabButton.swift in Sources */,
 				5680BDCF2A014DA2003C034B /* ImagePicker.swift in Sources */,
 				560FC4AD29FFCF70005A8C51 /* LocaleKeys.swift in Sources */,
 				5680BDD62A014FEF003C034B /* CreatePostView.swift in Sources */,
 				564C30352A04144B001B785E /* BlurView.swift in Sources */,
 				568027C42A03954E00269455 /* HomeViewModel.swift in Sources */,
+				5648722B2A0522F2004DE00E /* NotificationView.swift in Sources */,
 				560FC4E329FFFE6E005A8C51 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

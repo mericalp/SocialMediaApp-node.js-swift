@@ -41,4 +41,40 @@ class PostCellViewModel: ObservableObject {
             }
         }
     }
+    
+    func clapPost() {
+        RequestService.requestDomain = "http://localhost:3000/posts/\(self.post.id)/clapp"
+        
+        RequestService.clapPost(id: self.post.id) { result in
+            print("posts has been clapp")
+            print("Console log: \(result)")
+            
+        }
+        RequestService.requestDomain = "http://localhost:3000/notifications"
+        RequestService.sendNotification(username: self.currentUser.username, notSenderId: self.currentUser.id, notReceiverId: self.post.userId, notificationType: NotificationType.clap.rawValue, postText: self.post.text) { result in
+            print(result)
+        }
+        self.post.didClap = true
+    }
+    
+    func unclapPost() {
+        RequestService.requestDomain = "http://localhost:3000/posts/\(self.post.id)/unclapp"
+        
+        RequestService.clapPost(id: self.post.id) { result in
+            print("Tweet has been unclapp")
+            
+            
+        }
+        self.post.didClap = false
+    }
+    
+    func checkIfUserClapPost() {
+        if (self.post.likes.contains(self.currentUser.id)) {
+            self.post.didClap = true
+        }
+        else {
+            self.post.didClap = false
+        }
+    }
+    
 }

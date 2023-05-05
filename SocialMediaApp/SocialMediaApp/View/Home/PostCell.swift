@@ -10,6 +10,11 @@ import Kingfisher
 
 struct PostCell: View {
     @ObservedObject var viewModel: PostCellViewModel
+    var didClap: Bool { return viewModel.post.didClap ?? false }
+
+    init(viewModel: PostCellViewModel) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         VStack {
@@ -57,19 +62,19 @@ struct PostCell: View {
                 }.foregroundColor(.black)
                 
                 Button {
-//                if (self.didLike) {
-//                    print("it has not been  clapp")
-//                    viewModel.unclapPost()
-//                } else {
-//                    print("it has been clapp")
-//                    viewModel.clapPost()
-//                }
+                if (self.didClap) {
+                    print("it has not been  clapp")
+                    viewModel.unclapPost()
+                } else {
+                    print("it has been clapp")
+                    viewModel.clapPost()
+                }
                 } label: {
-//                  if (self.didLike == false) {
-//                      Image(systemName: "hands.clap").resizable().frame(width: 18, height: 15)
-//                  } else {
+                  if (self.didClap == false) {
+                      Image(systemName: "hands.clap").resizable().frame(width: 18, height: 15)
+                  } else {
                         Image(systemName: "hands.clap.fill").resizable().frame(width: 24, height: 24).offset(y: -2)
-//                  }
+                  }
                 }.foregroundColor(.black)
 
                 Button { } label: {
