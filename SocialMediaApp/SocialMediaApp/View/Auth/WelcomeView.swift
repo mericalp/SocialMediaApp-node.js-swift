@@ -18,7 +18,7 @@ struct WelcomeView: View {
 }
 
 struct BodyView: View {
-
+    @EnvironmentObject var viewModel: AuthViewModel
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -34,7 +34,7 @@ struct BodyView: View {
                     .padding(.all,PagePadding.All.normal.rawValue)
                 EmailButton { } .padding(.top,20)
                 NavigationLink {
-                    LogInView().environmentObject(AuthViewModel())
+                    LogInView().environmentObject(AuthViewModel.shared)
                  } label: {
                     HStack {
                         Spacer()

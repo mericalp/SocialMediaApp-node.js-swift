@@ -16,11 +16,21 @@ struct NotificationView: View {
     }
     
     var body: some View {
-        VStack {
-            ScrollView {
-                ForEach(vm.notifications) { noti in
-                    NotificationCell(noti: noti)
+        RefreshableScrollView {
+            ScrollView(.vertical, showsIndicators: false) {
+                LazyVStack(spacing: 18) {
+                    ForEach(vm.notifications) { noti in
+                        NotificationCell(noti: noti)
+                        Divider()
+                    }
                 }
+                .padding(.horizontal)
+                .padding(.top)
+            }
+        }onRefresh: { control in
+            DispatchQueue.main.async {
+                self.vm.fetchNotifications()
+                control.endRefreshing()
             }
         }
     }

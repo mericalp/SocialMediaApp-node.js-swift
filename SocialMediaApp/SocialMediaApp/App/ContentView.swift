@@ -8,21 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var viewModel = AuthViewModel()
+    @EnvironmentObject var viewModel: AuthViewModel
     
     var body: some View {
         if viewModel.isAuthenticated {
             if let user = viewModel.currentUser {
-                MainView(user: user)
+                TabBar(user: user)
             }
         } else {
-            WelcomeView()
+            WelcomeView().environmentObject(AuthViewModel.shared)
         }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ContentView()
+//    }
+//}

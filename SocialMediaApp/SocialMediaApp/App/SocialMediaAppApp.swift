@@ -12,7 +12,7 @@ struct SocialMediaAppApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-               ContentView()
+               ContentView().environmentObject(AuthViewModel.shared)
             }
             .navigationViewStyle(.stack)
         }

@@ -10,7 +10,7 @@ import Foundation
 class NotificationViewModel: ObservableObject {
     @Published var notifications = [Notification]()
     let user: User
-    
+    @Published var notiCount: Int = 0
     init(user: User) {
         self.user = user
         fetchNotifications()
@@ -24,10 +24,14 @@ class NotificationViewModel: ObservableObject {
                 guard let notification = try? JSONDecoder().decode([Notification].self, from: data as! Data) else { return }
                 DispatchQueue.main.async {
                     self.notifications = notification
+                    self.notiCount = self.notifications.count
+                    print("\(self.notiCount)")
                 }
             case .failure(let err):
                 print(err.localizedDescription)
             }
         }
+        
+       
     }
 }

@@ -8,10 +8,16 @@
 import SwiftUI
 
 struct TabBar: View {
+    @ObservedObject var vm: NotificationViewModel
     @State var showCreatePost = false
     @State var selectedIndex = 0
-    
+    @State private var badgeCount = 0
     let user: User
+    
+    init(user: User) {
+        self.user = user
+        self.vm =  NotificationViewModel(user: user)
+    }
     
     var body: some View {
         VStack {
@@ -34,6 +40,10 @@ struct TabBar: View {
                             Image(systemName: "magnifyingglass")
                         }.tag(1)
                     NotificationView(user: user)
+                        .onReceive(vm.$notiCount) { count in
+                            badgeCount = count
+                        }
+                        .badge(badgeCount)
                         .onTapGesture {
                             selectedIndex = 2
                         }.navigationBarHidden(true)

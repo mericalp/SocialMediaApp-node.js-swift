@@ -62,6 +62,7 @@
 		5680BDD92A015073003C034B /* MultilineTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5680BDD82A015073003C034B /* MultilineTextField.swift */; };
 		5680BDDC2A01514C003C034B /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 5680BDDB2A01514C003C034B /* Kingfisher */; };
 		5680BDDE2A0154DE003C034B /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5680BDDD2A0154DE003C034B /* MainView.swift */; };
+		56B5D5292A059DDA007A01BB /* CustomAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B5D5282A059DDA007A01BB /* CustomAlertView.swift */; };
 		56BA28C02A03F9270030708F /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BA28BF2A03F9270030708F /* ProfileView.swift */; };
 /* End PBXBuildFile section */
 
@@ -120,6 +121,7 @@
 		5680BDD52A014FEF003C034B /* CreatePostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePostView.swift; sourceTree = "<group>"; };
 		5680BDD82A015073003C034B /* MultilineTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineTextField.swift; sourceTree = "<group>"; };
 		5680BDDD2A0154DE003C034B /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		56B5D5282A059DDA007A01BB /* CustomAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertView.swift; sourceTree = "<group>"; };
 		56BA28BF2A03F9270030708F /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -289,6 +291,7 @@
 			children = (
 				560FC4A329FFCEE1005A8C51 /* WelcomeView.swift */,
 				560FC4A129FFCEB1005A8C51 /* LogInView.swift */,
+				56B5D5282A059DDA007A01BB /* CustomAlertView.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -516,6 +519,7 @@
 				560FC4C929FFD1A9005A8C51 /* Apple.swift in Sources */,
 				568027C82A03972200269455 /* PostCellViewModel.swift in Sources */,
 				560AF8D029F91E0C00F6B151 /* SocialMediaAppApp.swift in Sources */,
+				56B5D5292A059DDA007A01BB /* CustomAlertView.swift in Sources */,
 				564872362A052AC0004DE00E /* SearchViewModel.swift in Sources */,
 				560FC4A429FFCEE1005A8C51 /* WelcomeView.swift in Sources */,
 				5680BDC82A0124AD003C034B /* HomeView.swift in Sources */,
