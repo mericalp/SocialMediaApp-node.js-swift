@@ -9,13 +9,16 @@ import SwiftUI
 import Kingfisher
 
 struct ProfileView: View {
+    let user: User
     @ObservedObject var viewModel: ProfileViewModel
+    var isCurrentUser: Bool { return viewModel.user.isCurrentUser ?? false}
+    var isFollowed: Bool { return viewModel.user.isFollowed ?? false}
+    
     // For Smooth Slide Animation...
     @Namespace var animation
     // For Dark Mode Adoption..
     @Environment(\.colorScheme) var colorScheme
     
-    let user: User
     @State var currentTab = "Posts"
     @State var offset: CGFloat = 0
     @State var tabBarOffset: CGFloat = 0
@@ -25,6 +28,12 @@ struct ProfileView: View {
     @State var imagePickerRepresented = false
     @State var editProfileShow = false
     @State var width = UIScreen.main.bounds.width
+    
+    init(user: User) {
+        self.user = user
+        self.viewModel = ProfileViewModel(user: user)
+        
+    }
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
@@ -185,31 +194,50 @@ struct ProfileView: View {
                                         )
                                         .cornerRadius(25)
                                 }
-                                
-                                Button {
-                                    editProfileShow.toggle()
-                                } label: {
-                                    Text("Edit your profile")
-                                        .foregroundColor(.black)
-                                        .padding(.leading,10)
-                                        .padding(.trailing,8)
-                                        .padding(.vertical,10)
-                                        .padding(.horizontal)
-                                        .background(
-                                            Capsule()
-                                                .stroke(Color.black, lineWidth: 1.5)
+                                if (self.isCurrentUser) {
+                                    Button {
+                                        editProfileShow.toggle()
+                                    } label: {
+                                        Text("Edit your profile")
+                                            .foregroundColor(.black)
+                                            .padding(.leading,10)
+                                            .padding(.trailing,8)
+                                            .padding(.vertical,10)
+                                            .padding(.horizontal)
+                                            .background(
+                                                Capsule()
+                                                    .stroke(Color.black, lineWidth: 1.5)
+                                            )
+                                    }
+                                    .onAppear {
+                                        print("called")
+                                        KingfisherManager.shared.cache.clearCache()
+                                    }
+                                    .sheet(isPresented: $editProfileShow, onDismiss: {
+                                        KingfisherManager.shared.cache.clearCache()
+                                        AuthViewModel.shared.fetchUser(userId: viewModel.user.id)
+                                    }, content: {
+                                        EditProfileView(user: $viewModel.user)
+                                    })
+                                } else {
+                                    Button {
+                                        isFollowed ? self.viewModel.unfollow() : self.viewModel.follow()
+                                    } label: {
+                                        Text(isFollowed ? "Following" : "Follow")
+                                            .foregroundColor(isFollowed ? .black : .white)
+                                            .padding(.vertical, 10)
+                                            .padding(.horizontal)
+                                            .background(
+                                                ZStack {
+                                                    Capsule()
+                                                        .stroke(Color.black, lineWidth: isFollowed ? 1.5 : 0)
+                                                        .foregroundColor(isFollowed ? .white : .black)
+                                                    Capsule()
+                                                        .foregroundColor(isFollowed ? .white : .black)
+                                                }
                                         )
+                                    }
                                 }
-                                .onAppear {
-                                    print("called")
-                                    KingfisherManager.shared.cache.clearCache()
-                                }
-                                .sheet(isPresented: $editProfileShow, onDismiss: {
-                                    KingfisherManager.shared.cache.clearCache()
-                                    AuthViewModel.shared.fetchUser(userId: viewModel.user.id)
-                                }, content: {
-                                    EditProfileView(user: $viewModel.user)
-                                })
                             }
                         }
                         .padding(.leading, 8)

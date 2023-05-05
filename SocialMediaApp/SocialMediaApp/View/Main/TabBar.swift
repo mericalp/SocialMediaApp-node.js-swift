@@ -25,14 +25,30 @@ struct TabBar: View {
                         .tabItem {
                             Image(systemName: "house")
                         }.tag(0)
-                    ProfileView(viewModel: ProfileViewModel(user: user), user: user)
+                    SearchView()
                         .onTapGesture {
                             selectedIndex = 1
                         }.navigationBarHidden(true)
                         .navigationBarTitle("")
                         .tabItem {
-                            Image(systemName: "person")
+                            Image(systemName: "magnifyingglass")
                         }.tag(1)
+                    NotificationView(user: user)
+                        .onTapGesture {
+                            selectedIndex = 2
+                        }.navigationBarHidden(true)
+                        .navigationBarTitle("")
+                        .tabItem {
+                            Image(systemName: "bell")
+                        }.tag(2)
+                    ProfileView(user: user)
+                        .onTapGesture {
+                            selectedIndex = 3
+                        }.navigationBarHidden(true)
+                        .navigationBarTitle("")
+                        .tabItem {
+                            Image(systemName: "person")
+                        }.tag(3)
                 }
                 .accentColor(Color.peach)
                 .edgesIgnoringSafeArea(.top)

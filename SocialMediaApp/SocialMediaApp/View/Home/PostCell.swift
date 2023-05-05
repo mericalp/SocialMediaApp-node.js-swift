@@ -71,7 +71,7 @@ struct PostCell: View {
                 }
                 } label: {
                   if (self.didClap == false) {
-                      Image(systemName: "hands.clap").resizable().frame(width: 18, height: 15)
+                      Image(systemName: "hands.clap").resizable().frame(width: 24, height: 24).offset(y: -2)
                   } else {
                         Image(systemName: "hands.clap.fill").resizable().frame(width: 24, height: 24).offset(y: -2)
                   }

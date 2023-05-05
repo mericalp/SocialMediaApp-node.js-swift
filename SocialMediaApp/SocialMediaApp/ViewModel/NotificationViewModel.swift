@@ -17,7 +17,7 @@ class NotificationViewModel: ObservableObject {
     }
     
     func fetchNotifications () {
-        RequestService.requestDomain = "http://localhost:3000/notifications/\(self.user.id)"
+        RequestService.requestDomain = "http://localhost:3000/notification/\(self.user.id)"
         RequestService.fetchData { result in
             switch result {
             case .success(let data):

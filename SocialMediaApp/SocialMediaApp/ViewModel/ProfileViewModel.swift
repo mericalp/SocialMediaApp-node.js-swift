@@ -14,6 +14,8 @@ class ProfileViewModel: ObservableObject {
     init(user: User) {
         self.user = user
         fetchPosts()
+        checkIfIsCurrentUser()
+        checkIfUserIsFollowed()
     }
     
     func fetchPosts() {
@@ -39,6 +41,47 @@ class ProfileViewModel: ObservableObject {
             ImageUploader.uploadImage(paramName: "avatar", fileName: "image1", image: image, urlPath: "/users/me/avatar")
         }
     }
+    
+    func follow() {
+        guard let authedUser = AuthViewModel.shared.currentUser else { return }
+        RequestService.requestDomain = "http://localhost:3000/users/\(self.user.id)/follow"
+        RequestService.followingProcess(id: self.user.id) { result in
+            print(result)
+            print("Followed")
+        }
+        RequestService.requestDomain = "http://localhost:3000/notification"
+        RequestService.sendNotification(username: authedUser.username, notSenderId: authedUser.id, notReceiverId: self.user.id, notificationType: NotificationType.follow.rawValue, postText: "") { result in
+            print("FOLLOWED")
+            print(result)
+        }
+        print("Followed")
+        self.user.isFollowed = true
+    }
+    
+    func unfollow() {
+        RequestService.requestDomain = "http://localhost:3000/users/\(self.user.id)/unfollow"
+        RequestService.followingProcess(id: self.user.id) { result in
+            print(result)
+            print("Unfollowed")
+        }
+        print("Unfollowed")
+        self.user.isFollowed = false
+    }
+    
+    func checkIfUserIsFollowed() {
+        if (self.user.followers.contains(AuthViewModel.shared.currentUser!._id)) {
+            self.user.isFollowed = true
+        } else {
+            self.user.isFollowed = false
+        }
+    }
+    
+    func checkIfIsCurrentUser() {
+        if (self.user._id == AuthViewModel.shared.currentUser?._id) {
+            self.user.isCurrentUser = true
+        }
+    }
+    
     
     
 }
