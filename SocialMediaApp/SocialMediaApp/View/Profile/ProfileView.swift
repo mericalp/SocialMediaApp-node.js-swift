@@ -135,7 +135,6 @@ struct ProfileView: View {
                                 .foregroundColor(.primary)
                             Text("@\(viewModel.user.username)")
                                 .foregroundColor(.gray)
-//                            Text(viewModel.user.bio ?? "Make education not fail! 4️⃣2️⃣ Founder @TurmaApp soon.. @ProbableApp")
                             
                             HStack(spacing: 8) {
                                 if let userLocation = viewModel.user.location {
