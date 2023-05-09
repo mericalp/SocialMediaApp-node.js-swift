@@ -10,7 +10,7 @@ const swaggerJSDoc = require('swagger-jsdoc')
 const app = express()
 const port = process.env.PORT || 3000
 
-const options = {
+const options ={
     definition: {
         basepath: '/',
         openapi: '3.0.0',
@@ -20,7 +20,7 @@ const options = {
         },
         servers: [
             {
-              url: 'http://localhost:3000',
+              url: 'http://localhost:8080',
             }
           ]
     },
