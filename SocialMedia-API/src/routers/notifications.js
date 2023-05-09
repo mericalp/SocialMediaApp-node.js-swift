@@ -17,6 +17,22 @@ router.post('/notification', auth, async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ * /notification/:id:
+ *  get:
+ *      summary: Bildirim getirir.
+ *      description: URL üzerinden id parametresi alarak istenilen bildirimi getirir.
+ *      responses:
+ *          201:
+ *              description: Bildirim Başarıyla geti    rildi.
+ *          400: 
+ *              description: Bildirim gösterilemiyor,daha sonra tekrar dene!
+ *          401:
+ *              description: Please authenticate. / Lütfen kimliğinizi doğrulayın.
+ */
+
+
 router.get('/notification/:id', auth, async (req, res) => { 
     const _id = req.params.id
 
