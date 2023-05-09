@@ -11,8 +11,8 @@ const port = process.env.PORT || 3000
 
 app.use(express.json())
 app.use(userRouter)
-app.use(postRouter)
 app.use(notiRouter)
+app.use(postRouter)
 
 app.listen(port, () => { 
     console.log('Server is up on port ' + port)
