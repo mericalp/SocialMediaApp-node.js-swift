@@ -15,7 +15,7 @@ const options = {
         basepath: '/',
         openapi: '3.0.0',
         info : {
-            title: 'Nodejss',
+            title: 'Swift-Node.js Sociadl Media API Document',
             version: '1.0.0'
         },
         servers: [
