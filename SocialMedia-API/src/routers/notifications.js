@@ -25,7 +25,7 @@ router.post('/notification', auth, async (req, res) => {
  *      description: URL üzerinden id parametresi alarak istenilen bildirimi getirir.
  *      responses:
  *          201:
- *              description: Bildirim Başarıyla geti    rildi.
+ *              description: Bildirim Başarıyla getirildi.
  *          400: 
  *              description: Bildirim gösterilemiyor,daha sonra tekrar dene!
  *          401:
