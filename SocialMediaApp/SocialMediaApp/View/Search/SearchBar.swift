@@ -13,37 +13,47 @@ struct SearchBar: View {
     
     var body: some View {
         HStack {
-            TextField("Search Twitter", text: $text)
-                .padding(8)
-                .padding(.horizontal, 24)
-                .background(Color(.systemGray6))
-                .cornerRadius(20)
-                .overlay(
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(.gray)
-                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 8)
-                    }
-                )
-
-            Button(action: {
-                isEditing = false
-                text = ""
-                UIApplication.shared.endEditing()
-            }, label: {
-                Text("Cancel")
-                    .foregroundColor(.black)
-            })
-            .padding(.trailing, 8)
-            .transition(.move(edge: .trailing))
-            .animation(.default)
+            searchField
+            cancelButton
         }
         .onTapGesture {
             isEditing = true
         }
     }
+    
+    @ViewBuilder
+    private var searchField: some View {
+        TextField("Search Twitter", text: $text)
+            .padding(8)
+            .padding(.horizontal, 24)
+            .background(Color(.systemGray6))
+            .cornerRadius(20)
+            .overlay(
+                HStack {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundColor(.gray)
+                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 8)
+                }
+            )
+    }
+    
+    @ViewBuilder
+    private var cancelButton: some View {
+        Button(action: {
+            isEditing = false
+            text = ""
+            UIApplication.shared.endEditing()
+        }) {
+            Text("Cancel")
+                .foregroundColor(.black)
+        }
+        .padding(.trailing, 8)
+        .transition(.move(edge: .trailing))
+        .animation(.default)
+    }
 }
+
 
 extension UIApplication {
     func endEditing() {
