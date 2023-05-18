@@ -10,9 +10,7 @@
 		560AF8D029F91E0C00F6B151 /* SocialMediaAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560AF8CF29F91E0C00F6B151 /* SocialMediaAppApp.swift */; };
 		560AF8D229F91E0C00F6B151 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560AF8D129F91E0C00F6B151 /* ContentView.swift */; };
 		560AF8D729F91E0E00F6B151 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 560AF8D629F91E0E00F6B151 /* Preview Assets.xcassets */; };
-		560E95742A140AC8004D8EE0 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560E95732A140AC8004D8EE0 /* NetworkManager.swift */; };
 		560E95772A140ADC004D8EE0 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 560E95762A140ADC004D8EE0 /* Alamofire */; };
-		560E95792A140BBA004D8EE0 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560E95782A140BBA004D8EE0 /* LoginViewModel.swift */; };
 		560FC4A229FFCEB1005A8C51 /* LogInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560FC4A129FFCEB1005A8C51 /* LogInView.swift */; };
 		560FC4A429FFCEE1005A8C51 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560FC4A329FFCEE1005A8C51 /* WelcomeView.swift */; };
 		560FC4AB29FFCF62005A8C51 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 560FC4AA29FFCF62005A8C51 /* Localizable.strings */; };
@@ -73,8 +71,6 @@
 		560AF8CF29F91E0C00F6B151 /* SocialMediaAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMediaAppApp.swift; sourceTree = "<group>"; };
 		560AF8D129F91E0C00F6B151 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		560AF8D629F91E0E00F6B151 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		560E95732A140AC8004D8EE0 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		560E95782A140BBA004D8EE0 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		560FC4A129FFCEB1005A8C51 /* LogInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInView.swift; sourceTree = "<group>"; };
 		560FC4A329FFCEE1005A8C51 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		560FC4AA29FFCF62005A8C51 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
@@ -162,7 +158,6 @@
 		560AF8CE29F91E0C00F6B151 /* SocialMediaApp */ = {
 			isa = PBXGroup;
 			children = (
-				560E95722A140AB6004D8EE0 /* Network */,
 				560FC4A529FFCF24005A8C51 /* Utils */,
 				560FC49E29FFCDDE005A8C51 /* Model */,
 				560FC4E429FFFE94005A8C51 /* Service */,
@@ -180,14 +175,6 @@
 				560AF8D629F91E0E00F6B151 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		560E95722A140AB6004D8EE0 /* Network */ = {
-			isa = PBXGroup;
-			children = (
-				560E95732A140AC8004D8EE0 /* NetworkManager.swift */,
-			);
-			path = Network;
 			sourceTree = "<group>";
 		};
 		560FC49C29FFCDD5005A8C51 /* View */ = {
@@ -216,7 +203,6 @@
 				564C30382A042319001B785E /* EditProfileViewModel.swift */,
 				564872272A052239004DE00E /* NotificationViewModel.swift */,
 				564872352A052AC0004DE00E /* SearchViewModel.swift */,
-				560E95782A140BBA004D8EE0 /* LoginViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -528,14 +514,12 @@
 				560AF8D029F91E0C00F6B151 /* SocialMediaAppApp.swift in Sources */,
 				56B5D5292A059DDA007A01BB /* CustomAlertView.swift in Sources */,
 				564872362A052AC0004DE00E /* SearchViewModel.swift in Sources */,
-				560E95742A140AC8004D8EE0 /* NetworkManager.swift in Sources */,
 				560FC4A429FFCEE1005A8C51 /* WelcomeView.swift in Sources */,
 				5680BDC82A0124AD003C034B /* HomeView.swift in Sources */,
 				560FC4B129FFCFC5005A8C51 /* View.swift in Sources */,
 				564C30392A042319001B785E /* EditProfileViewModel.swift in Sources */,
 				560FC4C729FFD1A4005A8C51 /* Google.swift in Sources */,
 				560FC4CB29FFD1AE005A8C51 /* Email.swift in Sources */,
-				560E95792A140BBA004D8EE0 /* LoginViewModel.swift in Sources */,
 				564C30332A0413AF001B785E /* ProfileViewModel.swift in Sources */,
 				564872262A052212004DE00E /* Notification.swift in Sources */,
 				564C30372A041506001B785E /* TabButton.swift in Sources */,
