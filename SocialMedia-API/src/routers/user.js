@@ -13,7 +13,90 @@ const upload = multer({
     }
 })
 
-// Create User
+/**
+ * @swagger
+ * /user:
+ *   post:
+ *     summary: Kullanıcı oluştur.
+ *     description: Kullanıcı oluşturmanızı sağlar.
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string,
+ *               required: true
+ *             username:
+ *               type: string,
+ *             email:
+ *               type: string,
+ *               required: true
+ *             password:
+ *               type: string,
+ *               required: true
+ *             token:
+ *               type: string,
+ *               required: true
+ *             avatar:
+ *               type: string,
+ *             avatarExists:
+ *               type: Boolean,
+ *             bio: 
+ *               type: string,
+ *             website:
+ *               type: string,
+ *             location:
+ *               type: string,
+ *             followers:
+ *               type: array,
+ *             followings:
+ *               type: array
+ *     responses:
+ *       200:
+ *         description: Kullanıcı oluşturma başarılı.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string,
+ *               required: true
+ *             username:
+ *               type: string,
+ *             email:
+ *               type: string,
+ *               required: true
+ *             password:
+ *               type: string,
+ *               required: true
+ *             token:
+ *               type: string,
+ *               required: true
+ *             avatar:
+ *               type: string,
+ *             avatarExists:
+ *               type: Boolean,
+ *             bio: 
+ *               type: string,
+ *             website:
+ *               type: string,
+ *             location:
+ *               type: string,
+ *             followers:
+ *               type: array,
+ *             followings:
+ *               type: array
+ *       400:
+ *         description: "Bir Hata Belirdi !"
+ */
+
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
 
