@@ -15,9 +15,7 @@ class HomeViewModel: ObservableObject {
     }
     
     func fetchTweets() {
-        
-        RequestService.requestDomain = "http://localhost:3000/posts"
-        
+        RequestService.requestDomain = "\(Path.baseUrl)\(Path.post.rawValue)"
         RequestService.fetchData { res in
             switch res {
                 case .success(let data):
@@ -27,11 +25,9 @@ class HomeViewModel: ObservableObject {
                     DispatchQueue.main.async {
                         self.posts = posts
                     }
-
                 case .failure(let error):
                     print(error.localizedDescription)
             }
         }
     }
-    
 }

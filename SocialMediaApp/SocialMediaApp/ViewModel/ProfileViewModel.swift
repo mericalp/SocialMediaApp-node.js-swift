@@ -19,7 +19,7 @@ class ProfileViewModel: ObservableObject {
     }
     
     func fetchPosts() {
-        RequestService.requestDomain = "http://localhost:3000/tweets/\(self.user.id)"
+        RequestService.requestDomain = "\(Path.baseUrl)\(Path.post.rawValue)/\(self.user.id)"
         RequestService.fetchData { res in
             switch res {
                 case .success(let data):
@@ -36,32 +36,31 @@ class ProfileViewModel: ObservableObject {
     }
     
     func uploadProfileImage(text: String, image: UIImage?) {
+        let urlPath = "\(Path.avatar.rawValue)"
         guard let user = AuthViewModel.shared.currentUser else { return }
         if let image = image {
-            ImageUploader.uploadImage(paramName: "avatar", fileName: "image1", image: image, urlPath: "/users/me/avatar")
+            ImageUploader.uploadImage(paramName: "avatar", fileName: "image1", image: image, urlPath: urlPath)
         }
     }
     
     func follow() {
         guard let authedUser = AuthViewModel.shared.currentUser else { return }
-        RequestService.requestDomain = "http://localhost:3000/users/\(self.user.id)/follow"
+        RequestService.requestDomain = "\(Path.baseUrl)\(Path.users.rawValue)/\(self.user.id)/\(Path.follow.rawValue)"
         RequestService.followingProcess(id: self.user.id) { result in
-            print(result)
             print("Followed")
         }
-        RequestService.requestDomain = "http://localhost:3000/notification"
+        
+        RequestService.requestDomain = "\(Path.baseUrl)\(Path.notification.rawValue)"
         RequestService.sendNotification(username: authedUser.username, notSenderId: authedUser.id, notReceiverId: self.user.id, notificationType: NotificationType.follow.rawValue, postText: "") { result in
             print("FOLLOWED")
             print(result)
         }
-        print("Followed")
         self.user.isFollowed = true
     }
     
     func unfollow() {
-        RequestService.requestDomain = "http://localhost:3000/users/\(self.user.id)/unfollow"
+        RequestService.requestDomain = "\(Path.baseUrl)\(Path.users.rawValue)/\(self.user.id)/\(Path.unfollow.rawValue)"
         RequestService.followingProcess(id: self.user.id) { result in
-            print(result)
             print("Unfollowed")
         }
         print("Unfollowed")

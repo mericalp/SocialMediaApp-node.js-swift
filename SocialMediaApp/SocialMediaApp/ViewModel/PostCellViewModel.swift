@@ -11,22 +11,19 @@ import SwiftUI
 class PostCellViewModel: ObservableObject {
     @Published var post: Post
     @Published var user: User?
-    let currentUser: User
     @State var clap = false
-    
+    let currentUser: User
     
     init(post: Post, currentUser: User) {
         self.post = post
         self.currentUser = currentUser
-        
+
         self.fetchUser(userId: post.user)
         self.checkIfIsCurrentUser()
         self.checkIfUserClapPost()
     }
     
-    func fetchUser(userId: String) {
-        AuthService.requestDomain = "http://localhost:3000/users/\(userId)"
-        
+    func fetchUser(userId: String) {        
         AuthService.fetchUser(id: userId) { res in
             switch res {
             case .success(let data):
@@ -44,38 +41,28 @@ class PostCellViewModel: ObservableObject {
     }
     
     func clapPost() {
-        RequestService.requestDomain = "http://localhost:3000/posts/\(self.post.id)/like"
+        RequestService.requestDomain = "\(Path.baseUrl)\(Path.post.rawValue)/\(self.post.id)/\(Path.like.rawValue)"
+        RequestService.clapPost(id: self.post.id) { result in }
         
-        RequestService.clapPost(id: self.post.id) { result in
-            print("posts has been clapp")
-            print("Console log: \(result)")
-            
-        }
-        RequestService.requestDomain = "http://localhost:3000/notification"
-        RequestService.sendNotification(username: self.currentUser.username, notSenderId: self.currentUser.id, notReceiverId: self.post.userId, notificationType: NotificationType.clap.rawValue, postText: self.post.text) { result in
-            print(result)
-        }
+        RequestService.requestDomain = "\(Path.baseUrl)\(Path.notification.rawValue)"
+        RequestService.sendNotification(username: self.currentUser.username, notSenderId: self.currentUser.id, notReceiverId: self.post.userId, notificationType: NotificationType.clap.rawValue, postText: self.post.text) { result in }
         self.post.didClap = true
     }
     
     func unclapPost() {
-        RequestService.requestDomain = "http://localhost:3000/posts/\(self.post.id)/unlike"
-        RequestService.clapPost(id: self.post.id) { result in
-            print("Tweet has been unclapp")
-            
-            
-        }
+        RequestService.requestDomain = "\(Path.baseUrl)\(Path.post.rawValue)/\(self.post.id)/\(Path.unlike.rawValue)"
+        RequestService.clapPost(id: self.post.id) { result in }
         self.post.didClap = false
     }
     
     func checkIfUserClapPost() {
         if (self.post.likes.contains(self.currentUser.id)) {
             self.post.didClap = true
-        }
-        else {
+        } else {
             self.post.didClap = false
         }
     }
+    
     func checkIfIsCurrentUser() {
         if (self.user?._id == AuthViewModel.shared.currentUser?._id) {
             self.user?.isCurrentUser = true

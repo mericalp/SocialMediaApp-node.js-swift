@@ -10,14 +10,14 @@ import SwiftUI
 class PostsContentViewModel: ObservableObject {
     
     func uploadPost(text: String, image: UIImage?) {
+       
         guard let user = AuthViewModel.shared.currentUser else { return }
-        RequestService.requestDomain = "http://localhost:3000/posts"
-        
+        RequestService.requestDomain = "\(Path.baseUrl)\(Path.post.rawValue)"
         RequestService.postContent(text: text, user: user.name, username: user.username, userId: user.id) { result in
             if let image = image {
                 if let id = result?["_id"]! {
-                    ImageUploader.uploadImage(paramName: "upload", fileName: "image1", image: image, urlPath: "/uploadPostImage/\(id)")
-                    print("/uploadPostImage/\(id)")
+                    let path = "\(Path.uploadPostImage.rawValue)\(id)"
+                    ImageUploader.uploadImage(paramName: "upload", fileName: "image1", image: image, urlPath: path)
                 }
             }
         }

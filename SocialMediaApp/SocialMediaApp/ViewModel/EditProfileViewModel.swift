@@ -8,9 +8,8 @@
 import SwiftUI
 
 class EditProfileViewModel: ObservableObject {
-    
-    var user: User
     @Published var uploadComplete = false
+    var user: User
     
     init(user: User) {
         self.user = user
@@ -28,7 +27,7 @@ class EditProfileViewModel: ObservableObject {
     
     func uploadProfileImage(text: String, image: UIImage?) {
         guard let user = AuthViewModel.shared.currentUser else { return }
-        let urlPath = "/users/me/avatar"
+        let urlPath = "\(Path.avatar.rawValue)"
         if let image = image {
             print("There is an image")
             ImageUploader.uploadImage(paramName: "avatar", fileName: "image1", image: image, urlPath: urlPath)
@@ -37,9 +36,8 @@ class EditProfileViewModel: ObservableObject {
     
     func uploadUserData(name: String?, bio: String?, website: String?, location: String?) {
         let userId = user.id
-        let urlPath = "/users/\(userId)"
-        let url = URL(string: "http://localhost:3000\(urlPath)")!
-        AuthService.makeRequestWithAuth(urlString: url, reqBody: ["name": name, "bio": bio, "website": website, "location": location]) { res in
+        let url = URL(string: "\(Path.baseUrl)\(Path.users.rawValue)\("/")\(userId)")
+        AuthService.makeRequestWithAuth(url: url!, method: .patch, reqBody: ["name": name, "bio": bio, "website": website, "location": location]) { res in
             DispatchQueue.main.async {
                 self.save(name: name, bio: bio, website: website, location: location)
                 self.uploadComplete = true
