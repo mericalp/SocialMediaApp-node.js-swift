@@ -22,81 +22,113 @@ struct CreatePostView: View {
     var body: some View {
         VStack {
             HStack {
-                Button(action: {
-                    self.show.toggle()
-                }) {
-                    Text("Cancel").foregroundColor(Color.peach)
-                }
+                cancelButton()
                 Spacer()
-                
-                Button(action: {
-                    self.viewModel.uploadPost(text: text, image: selectedImage)
-                    self.show.toggle()
-                }) {
-                    Text("Send").padding(.all,16).font(.system(size: 13).bold())
-                }
-                .background {
-                    Rectangle()
-                        .fill(Color.peach)
-                        .cornerRadius(25)
-                }
-                .cornerRadius(25)
-                .foregroundColor(.white)
-                .clipShape(Capsule())
+                sendButton()
             }
-            
             HStack {
-                VStack {
-                    KFImage(URL(string: "http://localhost:3000/users/\(self.user.id)/avatar"))
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 50, height: 50)
-                        .clipShape(Circle())
-                        .padding(.leading, 4)
-                    Spacer()
-                }
+                avatarView()
                 MultilineTextField(text: $text)
             }
-            
-            if postImage == nil {
-                    ZStack {
-                        Button(action: {
-                            self.openButton.toggle()
-                        }) {
-                            Image(systemName: "plus")
-                                .renderingMode(.template)
-                                .resizable()
-                                .frame(width: 25, height: 25)
-                                .padding()
-                                .rotationEffect(.degrees(openButton ? 45 : 0))
-                                .animation((.spring(response: 0.2, dampingFraction: 0.4, blendDuration: 0)))
-                        }.background(Color.peach)
-                        .foregroundColor(.white)
-                        .clipShape(Circle())
-                        .shadow(color: Color.peach, radius: 5)
-                        .zIndex(5)
-                        
-                        SecondryButton(open: $openButton, icon: "photo.on.rectangle.angled", color: "grad2" , offSetY: -90, selectedImage: $selectedImage, postImage: $postImage)
-                        SecondryButton(open: $openButton, icon: "video", color: "Blue1" , offSetX: -60, offSetY: -60, delay: 0.2, selectedImage: $selectedImage, postImage: $postImage)
-                        SecondryButton(open: $openButton, icon: "xmark", color: "red" , offSetX: -90,delay: 0.4, selectedImage: $selectedImage, postImage: $postImage)
-                    }.padding()
-            } else if let image = postImage {
-                VStack {
-                    HStack(alignment: .top) {
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .padding(.horizontal)
-                            .frame(width: width * 0.9)
-                            .cornerRadius(16)
-                            .clipped()
-                    }.padding()
-                    Spacer()
-                }
-            }
-        }.padding()
+            postImageSection()
+        }
+        .padding()
     }
+    
+    @ViewBuilder
+    private func cancelButton() -> some View {
+        Button(action: {
+            self.show.toggle()
+        }) {
+            Text("Cancel").foregroundColor(Color.peach)
+        }
+    }
+
+    @ViewBuilder
+    private func sendButton() -> some View {
+        Button(action: {
+            self.viewModel.uploadPost(text: text, image: selectedImage)
+            self.show.toggle()
+        }) {
+            Text("Send").padding(.all,16).font(.system(size: 13).bold())
+        }
+        .background {
+            Rectangle()
+                .fill(Color.peach)
+                .cornerRadius(25)
+        }
+        .cornerRadius(25)
+        .foregroundColor(.white)
+        .clipShape(Capsule())
+    }
+
+    @ViewBuilder
+    private func avatarView() -> some View {
+        VStack {
+            KFImage(URL(string: "http://localhost:8000/users/\(self.user.id)/avatar"))
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 50, height: 50)
+                .clipShape(Circle())
+                .padding(.leading, 4)
+            Spacer()
+        }
+    }
+
+    @ViewBuilder
+    private func imageButton() -> some View {
+        Button(action: {
+            self.openButton.toggle()
+        }) {
+            Image(systemName: "plus")
+                .renderingMode(.template)
+                .resizable()
+                .frame(width: 25, height: 25)
+                .padding()
+                .rotationEffect(.degrees(openButton ? 45 : 0))
+                .animation((.spring(response: 0.2, dampingFraction: 0.4, blendDuration: 0)))
+        }
+        .background(Color.peach)
+        .foregroundColor(.white)
+        .clipShape(Circle())
+        .shadow(color: Color.peach, radius: 5)
+        .zIndex(5)
+    }
+
+    @ViewBuilder
+    private func postImageSection() -> some View {
+        if postImage == nil {
+            ZStack {
+                imageButton()
+                
+                SecondryButton(open: $openButton, icon: "photo.on.rectangle.angled", color: "grad2" , offSetY: -90, selectedImage: $selectedImage, postImage: $postImage)
+                SecondryButton(open: $openButton, icon: "video", color: "Blue1" , offSetX: -60, offSetY: -60, delay: 0.2, selectedImage: $selectedImage, postImage: $postImage)
+                SecondryButton(open: $openButton, icon: "xmark", color: "red" , offSetX: -90,delay: 0.4, selectedImage: $selectedImage, postImage: $postImage)
+            }
+            .padding()
+        } else if let image = postImage {
+            VStack {
+                HStack(alignment: .top) {
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .padding(.horizontal)
+                        .frame(width: width * 0.9)
+                        .cornerRadius(16)
+                        .clipped()
+                }
+                .padding()
+                Spacer()
+            }
+        }
+    }
+    
+    
 }
+
+
+
+
 
 struct SecondryButton: View {
     @Binding var open: Bool

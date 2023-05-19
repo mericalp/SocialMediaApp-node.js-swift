@@ -43,73 +43,95 @@ struct LoginBodyView: View {
     @Binding var shown: Bool
 
     var body: some View {
-            ScrollView(showsIndicators: false) {
-                HStack{
-                    Text(registerUser ? "  Register Now" :"   Login")
-                        .font(.system(size: FontSizes.largeTitle,weight: .bold))
-                }
-                .frame(width: UIScreen.main.bounds.width,alignment: .leading)
-                
-                VStack(spacing:27) {
-                    Spacer().frame(height: 11)
-                    if registerUser {
-                        TextField("username", text: $authManager.username)
-                            .modifier(CustomModifier())
-                    }
-                    if registerUser {
-                        TextField("name", text: $authManager.name)
-                            .modifier(CustomModifier())
-                    }
-                    TextField("Email", text: $authManager.email)
-                        .modifier(CustomModifier())
-                    SecureField("Password", text: $authManager.password)
-                        .modifier(CustomModifier())
-                    
-                    Button {
-                        withAnimation {
-                            registerUser.toggle()
-                        }
-                    } label:{
-                        HStack(spacing:5){
-                            Text(registerUser ? "   Have an account?" : "   Not a remember?" ).font(.system(size: 16))
-                            Text(registerUser ? " Back to login" : "Create Account").font(.system(size: 16))
-                                .foregroundColor(.blue)
-                            Spacer().frame(width: 12)
-                        }
-                    }
-                    
-                    Button {
-                        if registerUser {
-                            authManager.register()
-                            shown.toggle()
-                            authManager.username = ""
-                            authManager.name = ""
-                            authManager.email = ""
-                            authManager.password = ""
-                            registerUser = false
-                        } else{
-                            authManager.login()
-                            print(authManager.isAuthenticated)
-                        }
-                    } label:{
-                        HStack{
-                            Text(registerUser ? "Sign Up" : "Login").font(.system(size: 22).bold())
-                                .foregroundColor(.white)
-                        }
-                        .frame(width: ViewWidth.buttonWeight, height: ViewHeight.buttonHeight, alignment: .center)
-                        .padding()
-                        .background(LinearGradient.linerGradient)
-                        .cornerRadius(12)
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Spacer().frame(height: 410)
-                }
-                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height, alignment: .center)
-                .background(.thickMaterial)
-                .cornerRadius(55)
-            }
+          ScrollView(showsIndicators: false) {
+              header()
+              form()
+            
+          }
+      }
+    
+    private func header() -> some View {
+        HStack {
+            Text(registerUser ? "  Register Now" :"   Login")
+                .font(.system(size: FontSizes.largeTitle, weight: .bold))
+        }
+        .frame(width: UIScreen.main.bounds.width, alignment: .leading)
     }
+
+    private func form() -> some View {
+        VStack(spacing: 27) {
+            Spacer().frame(height: 11)
+            
+            if registerUser {
+                TextField("username", text: $authManager.username)
+                    .modifier(CustomModifier())
+            }
+            
+            if registerUser {
+                TextField("name", text: $authManager.name)
+                    .modifier(CustomModifier())
+            }
+            
+            TextField("Email", text: $authManager.email)
+                .modifier(CustomModifier())
+            
+            SecureField("Password", text: $authManager.password)
+                .modifier(CustomModifier())
+            
+            toggleButton()
+            
+            actionButton()
+            
+            Spacer().frame(height: 410)
+        }
+        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height, alignment: .center)
+        .background(.thickMaterial)
+        .cornerRadius(55)
+    }
+
+    private func toggleButton() -> some View {
+        Button {
+            withAnimation {
+                registerUser.toggle()
+            }
+        } label: {
+            HStack(spacing: 5) {
+                Text(registerUser ? "   Have an account?" : "   Not a remember?" ).font(.system(size: 16))
+                Text(registerUser ? " Back to login" : "Create Account").font(.system(size: 16))
+                    .foregroundColor(.blue)
+                Spacer().frame(width: 12)
+            }
+        }
+    }
+
+    private func actionButton() -> some View {
+        Button {
+            if registerUser {
+                authManager.register()
+                shown.toggle()
+                authManager.username = ""
+                authManager.name = ""
+                authManager.email = ""
+                authManager.password = ""
+                registerUser = false
+            } else {
+                authManager.login()
+                print(authManager.isAuthenticated)
+            }
+        } label: {
+            HStack {
+                Text(registerUser ? "Sign Up" : "Login").font(.system(size: 22).bold())
+                    .foregroundColor(.white)
+            }
+            .frame(width: ViewWidth.buttonWeight, height: ViewHeight.buttonHeight, alignment: .center)
+            .padding()
+            .background(LinearGradient.linerGradient)
+            .cornerRadius(12)
+        }
+        .buttonStyle(.bordered)
+    }
+
+   
 }
 
 struct CustomModifier: ViewModifier {

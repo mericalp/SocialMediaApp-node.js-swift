@@ -25,18 +25,24 @@ struct PostCell: View {
 
 struct UserInfoCellView: View {
     @ObservedObject var viewModel: PostCellViewModel
+    @StateObject private var profileImageLoader = ImageLoader()
+    @StateObject private var postImageLoader = ImageLoader()
     
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
             if let user = viewModel.user {
+                let profileImage = URL(string: "\(Path.baseUrl)\(Path.users.rawValue)/\(self.viewModel.post.userId)/avatar")!
                 NavigationLink { } label: {
-                    KFImage(URL(string: "http://localhost:3000/users/\(self.viewModel.post.userId)/avatar"))
+                    profileImageLoader.image?
                         .resizable()
                         .background(Color.peach)
                         .aspectRatio(contentMode: .fill)
                         .frame(width: 55, height: 55)
                         .clipShape(Circle())
                         .padding(.leading, 8)
+                }
+                .onAppear {
+                    profileImageLoader.loadImage(from: profileImage)
                 }
             }
 
@@ -49,9 +55,10 @@ struct UserInfoCellView: View {
                 Text(viewModel.post.text)
                 
                 if let imageId = viewModel.post.id {
+                    let postImage = URL(string: "\(Path.baseUrl)\(Path.post.rawValue)/\(imageId)/image")!
                     if viewModel.post.image == "true" {
                         GeometryReader { proxy in
-                            KFImage(URL(string: "http://localhost:3000/posts/\(imageId)/image"))
+                            postImageLoader.image?
                                 .resizable()
                                 .background(Color.peach)
                                 .aspectRatio(contentMode: .fill)
@@ -59,11 +66,15 @@ struct UserInfoCellView: View {
                                 .cornerRadius(15)
                         }
                         .frame(height: 250)
+                        .onAppear {
+                            postImageLoader.loadImage(from: postImage)
+                        }
                     }
                 }
             }
         Spacer()
         }
+        
     }
 }
 

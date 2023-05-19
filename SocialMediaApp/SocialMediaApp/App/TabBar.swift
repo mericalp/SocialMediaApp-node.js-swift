@@ -4,7 +4,6 @@
 //
 //  Created by Meric Alp on 2.05.2023.
 //
-
 import SwiftUI
 
 struct TabBar: View {
@@ -13,12 +12,12 @@ struct TabBar: View {
     @State var selectedIndex = 0
     @State private var badgeCount = 0
     let user: User
-    
+
     init(user: User) {
         self.user = user
         self.vm =  NotificationViewModel(user: user)
     }
-    
+
     fileprivate func wandandraysFunc() -> VStack<TupleView<(Spacer, some View)>> {
         return VStack {
             Spacer()
@@ -36,7 +35,7 @@ struct TabBar: View {
             }.padding()
         }
     }
-    
+
     var body: some View {
         VStack {
             ZStack {

@@ -21,7 +21,6 @@ struct NotificationView: View {
                 LazyVStack(spacing: 18) {
                     ForEach(vm.notifications) { noti in
                         NotificationCell(noti: noti)
-                        Divider()
                     }
                 }
                 .padding(.horizontal)

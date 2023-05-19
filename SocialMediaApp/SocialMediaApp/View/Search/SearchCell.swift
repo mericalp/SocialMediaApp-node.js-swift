@@ -10,10 +10,12 @@ import Kingfisher
 
 struct SearchUserCell: View {
     let user: User
-    
+    @StateObject private var profileImageLoader = ImageLoader()
+
     var body: some View {
+        let imageURL =  URL(string:"\(Path.baseUrl)\(Path.users.rawValue)/\(self.user.id)/avatar")!
         HStack {
-            KFImage(URL(string: "http://localhost:3000/users/\(self.user.id)/avatar"))
+            profileImageLoader.image?
                 .resizable()
                 .scaledToFit()
                 .frame(width: 44, height: 44)
@@ -26,6 +28,9 @@ struct SearchUserCell: View {
                     .foregroundColor(.black)
             }
             Spacer(minLength: 0)
+        }
+        .onAppear {
+            profileImageLoader.loadImage(from: imageURL)
         }
     }
 }
