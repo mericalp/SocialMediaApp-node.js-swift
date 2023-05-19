@@ -7,6 +7,8 @@
 
 
 import Foundation
+import SwiftUI
+import Kingfisher
 
 struct ApiResponse: Decodable {
     var user: User
@@ -29,4 +31,14 @@ struct User: Decodable, Identifiable {
     var followings: [String]
     var isCurrentUser: Bool? = false
     var isFollowed: Bool? = false
+}
+
+
+
+class ImageLoader: ObservableObject {
+    @Published var image: KFImage?
+    
+    func loadImage(from url: URL) {
+        self.image = KFImage(url)
+    }
 }
