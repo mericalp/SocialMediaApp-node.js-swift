@@ -15,18 +15,18 @@ class AuthViewModel: ObservableObject {
     
     @Published var isAuthenticated: Bool = false
     @Published var currentUser: User?
-
-    private let defaults = UserDefaults.standard
-    static let shared = AuthViewModel()
     
-    init() {
-        let defaults = UserDefaults.standard
-        let token = defaults.object(forKey: "jsonwebtoken")
+    static let shared = AuthViewModel()
+    private let defaults = UserDefaults.standard
 
+    init() {
+        let token = defaults.object(forKey: "jsonwebtoken")
+        
         if token != nil {
             isAuthenticated = true
             if let userId = defaults.object(forKey: "userid") {
                 fetchUser(userId: userId as! String)
+//                print("user Fetch")
             }
         } else {
             isAuthenticated = false
@@ -34,6 +34,7 @@ class AuthViewModel: ObservableObject {
     }
     
     func login () {
+        let defaults = UserDefaults.standard        
         AuthService.login(email: email, password: password) { result in
             switch result {
             case .success(let data):
@@ -50,6 +51,7 @@ class AuthViewModel: ObservableObject {
     }
     
     func register() {
+        let defaults = UserDefaults.standard
         AuthService.register(email: email, password: password, username: username, name: name) { result in
             switch result {
             case .success(let data):
@@ -67,6 +69,8 @@ class AuthViewModel: ObservableObject {
     
     func fetchUser(userId: String) {
         let defaults = UserDefaults.standard
+//        AuthService.requestDomain = "http://localhost:8000/users/\(userId)"
+        
         AuthService.fetchUser(id: userId) { result in
             switch result {
             case .success(let data):
@@ -75,6 +79,7 @@ class AuthViewModel: ObservableObject {
                     defaults.setValue(user.id, forKey: "userid")
                     self.isAuthenticated = true
                     self.currentUser = user
+//                    print(user)
                 }
             case .failure(let error):
                 print(error.localizedDescription)
@@ -87,11 +92,14 @@ class AuthViewModel: ObservableObject {
         defaults.removeObject(forKey: "jsonwebtoken")
         DispatchQueue.main.async {
             self.isAuthenticated = false
+            // Kullanıcıyı giriş ekranına yönlendirebilirsin
         }
     }
+    
 
-    private func setUserDefaults(token: String?, userId: String?) {
+    private func setUserDefaults(token: String, userId: String) {
         defaults.setValue(token, forKey: "jsonwebtoken")
         defaults.setValue(userId, forKey: "userid")
     }
+    
 }

@@ -13,7 +13,7 @@ struct ContentView: View {
     var body: some View {
         if viewModel.isAuthenticated {
             if let user = viewModel.currentUser {
-                TabBar(user: user)
+                TabBar(user: user).environmentObject(AuthViewModel.shared)
             }
         } else {
             WelcomeView().environmentObject(AuthViewModel.shared)

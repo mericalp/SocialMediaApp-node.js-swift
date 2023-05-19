@@ -23,7 +23,7 @@ struct SearchBar: View {
     
     @ViewBuilder
     private var searchField: some View {
-        TextField("Search Twitter", text: $text)
+        TextField("Search", text: $text)
             .padding(8)
             .padding(.horizontal, 24)
             .background(Color(.systemGray6))

@@ -88,7 +88,7 @@ struct TabBarView: View {
                 .tabItem {
                     Image(systemName: "bell")
                 }.tag(2)
-            ProfileView(user: user)
+            ProfileView(user: user).environmentObject(AuthViewModel.shared)
                 .onTapGesture {
                     selectedIndex = 3
                 }.navigationBarHidden(true)

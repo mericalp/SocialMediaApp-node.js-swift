@@ -40,7 +40,6 @@ struct ProfileView: View {
     var body: some View {
          ScrollView(.vertical, showsIndicators: false) {
              VStack(spacing: 15) {
-                 
                  profileImageView
                  profileBioView
                  customSegmentedMenuView
@@ -54,7 +53,6 @@ struct ProfileView: View {
     
     @ViewBuilder
      private var profileImageView: some View {
-         
          VStack {
              HStack {
                  VStack {
@@ -94,13 +92,13 @@ struct ProfileView: View {
                  }
                  Spacer()
                  
-                 Button{
-                     authManager.logout()
+                 NavigationLink{
+                     SettingsView().environmentObject(AuthViewModel.shared)
                  } label: {
                      Image(systemName: "gearshape")
                          .foregroundColor(.black)
                  }
-                 .padding(.top)
+             
              }
              .padding(.top, -25)
              .padding(.bottom, -10)

@@ -25,7 +25,7 @@ struct NotificationCell: View {
             HStack(alignment: .top) {
                 Image(systemName: "person.fill")
                     .resizable()
-                    .foregroundColor(.blue)
+                    .foregroundColor(.black)
                     .scaledToFit()
                     .frame(width: 20, height: 20)
                 VStack(alignment: .leading, spacing: 5) {
