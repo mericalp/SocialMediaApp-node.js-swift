@@ -18,98 +18,108 @@ enum NetworkError: Error {
     case invalidUrl
     case noData
     case decodingError
+    case custom(errorMessage: String)
+}
+
+enum Method: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case delete = "DELETE"
+    case patch = "PATCH"
+}
+
+enum Path: String {
+    case users = "users"
+    case post = "posts"
+    case login = "users/login"
+    case avatar = "users/me/avatar"
+    case uploadPostImage = "uploadPostImage/"
+    case notification = "notification"
+    case like = "like"
+    case unlike = "unlike"
+    case follow = "follow"
+    case unfollow = "unfollow"
+    
+    static let baseUrl: String = "http://localhost:8000/"
+    
+    func url() -> URL? {
+            return URL(string: Path.baseUrl + rawValue)
+    }
 }
 
 public class AuthService {
     public static var requestDomain = ""
     
-    static func login(email: String, password: String, username: String, name: String, completion: @escaping ( _ result: Result<Data?,AuthError>) -> Void ) {
-        let urlString = URL(string: "http://localhost:3000/users/login")!
-        makeRequest(urlString: urlString, reqBody: ["email": email, "password": password]) { result in
-            switch result {
-            case .success(let data):
-                completion(.success(data))
-            case .failure(let err):
-                completion(.failure(.invalidCredentials))
-                print(err.localizedDescription)
-            }
-        }
-    }
+       static func login(email: String, password: String, completion: @escaping (Result<Data?, AuthError>) -> Void) {
+           guard let url = URL(string: Path.baseUrl + Path.login.rawValue) else {
+               completion(.failure(.invalidCredentials))
+               return
+           }
+           print("\(url)")
+           let requestBody = ["email": email, "password": password]
+           makeRequest(url: .login, method: .post, body: requestBody, completion: completion)
+       }
+       
+       static func register(email: String, password: String, username: String, name: String, completion: @escaping (Result<Data?, AuthError>) -> Void) {
+           guard let url = URL(string: "http://localhost:8000/users") else {
+               completion(.failure(.invalidCredentials))
+               return
+           }
+           
+           let requestBody = ["email": email, "name": name, "username": username, "password": password]
+           makeRequest(url: .users, method: .post, body: requestBody, completion: completion)
+       }
+       
     
-    static func register(email: String, password: String, username: String, name: String, completion: @escaping(_ result: Result<Data?, AuthError>) -> Void) {
-        let urlString = URL(string: "http://localhost:3000/users")!
-        makeRequest(urlString: urlString, reqBody: ["email": email, "name": name, "username": username, "password": password]) { result in
-            switch result {
-            case .success(let data):
-                completion(.success(data))
-            case .failure(.invalidUrl):
-                completion(.failure(.custom(errorMessage: "invalid URL error")))
-            case .failure(.decodingError):
-                completion(.failure(.custom(errorMessage: "Decoding error")))
-            case.failure(.noData):
-                completion(.failure(.custom(errorMessage: "no Data error")))
-            }
-        }
-    }
-    
-    
-    static func makeRequest(urlString: URL, reqBody: [String: Any], completion: @escaping (_ result:Result<Data?,NetworkError>) -> Void ) {
-        let session = URLSession.shared
-        var request = URLRequest(url: urlString)
-        request.httpMethod = "POST"
-        let boundry = UUID().uuidString
+    static func makeRequest(url: Path, method: Method, body: [String: Any], completion: @escaping (Result<Data?, AuthError>) -> Void) {
+        var request = URLRequest(url: url.url()!)
+        request.httpMethod = method.rawValue
         
         do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: reqBody, options: .prettyPrinted)
-        } catch let error {
-            print(error)
+            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+        } catch {
+            completion(.failure(.custom(errorMessage: "JSON serialization error")))
+            return
         }
+        request.addAuthHeaders()
         
-        let token = UserDefaults.standard.string(forKey: "jsonwebtoken")
-        print("Bearer \(token ?? "not token" )")
-        request.addValue("Bearer \(token ?? "not token" )", forHTTPHeaderField: "Authorization")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        let task = session.dataTask(with: request) { data, response, err in
-            guard err == nil else { return }
-            guard let data = data else {
-                completion(.failure(.noData))
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(.invalidCredentials))
                 return
             }
-            completion(.success(data))
             
-            do {
-                if let _ = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] { }
-            } catch let error {
-                completion(.failure(.decodingError))
-                print(error)
+            guard let data = data else {
+                completion(.failure(.invalidCredentials))
+                return
             }
+            
+            completion(.success(data))
         }
         task.resume()
     }
     
     
-    static func makeRequestWithAuth(urlString: URL, reqBody: [String: Any], completion: @escaping (_ result: Result<Data?, NetworkError>) -> Void ) {
+    static func makeRequestWithAuth(url: URL, method: Method, reqBody: [String: Any], completion: @escaping (_ result: Result<Data?, NetworkError>) -> Void ) {
         let session = URLSession.shared
-        var request = URLRequest(url: urlString)
-        request.httpMethod = "PATCH"
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
         let boundary = UUID().uuidString
         
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: reqBody, options: .prettyPrinted)
-        } catch let error {
-            print(error)
+        } catch {
+            completion(.failure(.custom(errorMessage: "JSON serialization error")))
+            return
         }
+        request.addAuthHeaders()
         
-        let token = UserDefaults.standard.string(forKey: "jsonwebtoken")
-        print("Bearer \(token ?? "not token" )")
-        request.addValue("Bearer \(token ?? "not token" )", forHTTPHeaderField: "Authorization")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        let task = session.dataTask(with: request) { data, response, err in
-            guard err == nil else { return }
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(.invalidUrl))
+                return
+            }
             guard let data = data else {
                 completion(.failure(.noData))
                 return
@@ -127,16 +137,12 @@ public class AuthService {
     }
     
     static func fetchUser(id: String, completion: @escaping (_ result: Result<Data?, AuthError>) -> Void) {
-        let urlString = URL(string: "http://localhost:3000/users/\(id)")!
-        let urlRequest = URLRequest(url: urlString)
-        let url = URL(string: requestDomain)!
-        
+        let url = URL(string: "\(Path.baseUrl)\(Path.users.rawValue)/\(id)")!
+        let urlRequest = URLRequest(url: url)
         let session = URLSession.shared
         var request = URLRequest(url: url)
-        
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.httpMethod = Method.get.rawValue
+        request.addAuthHeaders()
         
         let task = session.dataTask(with: request) { data, response, err in
             guard err == nil else { return }
@@ -157,16 +163,11 @@ public class AuthService {
     }
     
     static func fetchUsers(completion: @escaping (_ result: Result<Data?, AuthError>) -> Void) {
-        let urlString = URL(string: "http://localhost:3000/users")!
-        let urlRequest = URLRequest(url: urlString)
-        let url = URL(string: requestDomain)!
-        
+        let urlString = URL(string: "\(Path.baseUrl)\(Path.users)")!
         let session = URLSession.shared
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        var request = URLRequest(url: urlString)
+        request.httpMethod = Method.get.rawValue
+        request.addAuthHeaders()
         
         let task = session.dataTask(with: request) { data, res, err in
             guard err == nil else { return }

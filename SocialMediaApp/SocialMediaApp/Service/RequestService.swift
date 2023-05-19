@@ -10,49 +10,64 @@ import Foundation
 public class RequestService {
     public static var requestDomain = ""
     
-    public static func postContent(text: String, user: String, username: String, userId: String, completion: @escaping (_ result: [String:Any]? ) -> Void ) {
-        let params = ["text" : text, "userId" : userId, "user": user, "username" : username] as [String : Any]
-        let url = URL(string: requestDomain)!
-        let session = URLSession.shared
+    static func makeRequest(method: Method, url: URL, body: [String: Any]?, completion: @escaping (_ result: Result<[String: Any]?, NetworkError>) -> Void) {
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: params, options: .prettyPrinted)
-        }
-        catch let error {
-            print(error)
+        request.httpMethod = method.rawValue
+        
+        if let body = body {
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+            } catch {
+                completion(.failure(.custom(errorMessage: "JSON serialization error")))
+                return
+            }
         }
         
-        let token = UserDefaults.standard.string(forKey: "jsonwebtoken")!
-        print("Bearer \(token)")
-        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addAuthHeaders()
         
-        let task = session.dataTask(with: request) { data, res, err in
-            guard err == nil else { return }
-            guard let data = data else { return }
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(.invalidUrl))
+                return
+            }
+            
+            guard let data = data else {
+                completion(.failure(.noData))
+                return
+            }
+            
             do {
                 if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
-                completion(json)
+                    completion(.success(json))
                 }
-            }
-            catch let error {
-                print(error)
+            } catch {
+                completion(.failure(.custom(errorMessage: "JSON deserialization error")))
             }
         }
         task.resume()
+    }
+    
+    public static func postContent(text: String, user: String, username: String, userId: String, completion: @escaping (_ result: [String: Any]?) -> Void) {
+        let params = ["text": text, "userId": userId, "user": user, "username": username]
+        guard let url = URL(string: requestDomain) else { return }
+        
+        makeRequest(method: .post, url: url, body: params) { result in
+            switch result {
+            case .success(let json):
+                completion(json)
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     static func fetchData (completion: @escaping (_ result: Result<Data?,NetworkError>) -> Void) {
         let url = URL(string: requestDomain)!
         let session = URLSession.shared
         var request = URLRequest(url: url)
-        
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.httpMethod = Method.get.rawValue
+        request.addAuthHeaders()
         
         let task = session.dataTask(with: request) { data, response, err in
             guard err == nil else { return }
@@ -62,108 +77,56 @@ public class RequestService {
         task.resume()
     }
     
-    public static func clapPost(id: String, completion: @escaping (_ result: [String:Any]?) -> Void) {
-            let params = ["id" : id] as [String : Any]
-            let url = URL(string: requestDomain)!
-            let session = URLSession.shared
+    public static func clapPost(id: String, completion: @escaping (_ result: [String: Any]?) -> Void) {
+        let params = ["id": id]
+        guard let url = URL(string: requestDomain) else { return }
         
-            var request = URLRequest(url: url)
-            request.httpMethod = "PUT"
-            
-            do {
-                request.httpBody = try JSONSerialization.data(withJSONObject: params, options: .prettyPrinted)
-            } catch let error {
+        makeRequest(method: .put, url: url, body: params) { result in
+            switch result {
+            case .success(let json):
+                completion(json)
+            case .failure(let error):
                 print(error)
             }
-
-            let token = UserDefaults.standard.string(forKey: "jsonwebtoken")!
-            print("Bearer \(token)")
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-            let task = session.dataTask(with: request) { data, res, err in
-                guard err == nil else { return }
-                guard let data = data else { return }
-                do {
-                    if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
-                        completion(json)
-                    }
-                } catch let error {
-                    print(error)
-                }
-            }
-            task.resume()
+        }
     }
     
-    public static func sendNotification(username: String, notSenderId: String, notReceiverId: String, notificationType: String, postText: String, completion: @escaping (_ result: [String:Any]?) -> Void) {
-            var params : [String: Any] {
-                return postText.isEmpty ? ["username": username, "notSenderId": notSenderId, "notReceiverId": notReceiverId, "notificationType": notificationType] as [String : Any] : ["username": username, "notSenderId": notSenderId, "notReceiverId": notReceiverId, "notificationType": notificationType, "postText": postText] as [String : Any]
-            }
-            
-            let url = URL(string: requestDomain)!
-            let session = URLSession.shared
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            
-            do {
-                request.httpBody = try JSONSerialization.data(withJSONObject: params, options: .prettyPrinted)
-            } catch let error {
+    public static func sendNotification(username: String, notSenderId: String, notReceiverId: String, notificationType: String, postText: String, completion: @escaping (_ result: [String: Any]?) -> Void) {
+        var params: [String: Any] = [
+            "username": username,
+            "notSenderId": notSenderId,
+            "notReceiverId": notReceiverId,
+            "notificationType": notificationType
+        ]
+        
+        if !postText.isEmpty {
+            params["postText"] = postText
+        }
+        
+        guard let url = URL(string: requestDomain) else { return }
+        
+        makeRequest(method: .post, url: url, body: params) { result in
+            switch result {
+            case .success(let json):
+                completion(json)
+            case .failure(let error):
                 print(error)
             }
-        
-            let token = UserDefaults.standard.string(forKey: "jsonwebtoken")!
-            print("Bearer \(token)")
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-            let task = session.dataTask(with: request) { data, res, err in
-                guard err == nil else { return }
-                guard let data = data else { return }
-                do {
-                    if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
-                        completion(json)
-                    }
-                } catch let error {
-                    print(error)
-                }
-            }
-            task.resume()
+        }
     }
     
-    public static func followingProcess(id: String, completion: @escaping (_ result: [String:Any]?) -> Void) {
-            let params = ["id" : id] as [String : Any]
-            let url = URL(string: requestDomain)!
-            let session = URLSession.shared
+    public static func followingProcess(id: String, completion: @escaping (_ result: [String: Any]?) -> Void) {
+        let params = ["id": id]
+        guard let url = URL(string: requestDomain) else { return }
         
-            var request = URLRequest(url: url)
-            request.httpMethod = "PUT"
-            do {
-                request.httpBody = try JSONSerialization.data(withJSONObject: params, options: .prettyPrinted)
-            } catch let error {
+        makeRequest(method: .put, url: url, body: params) { result in
+            switch result {
+            case .success(let json):
+                completion(json)
+            case .failure(let error):
                 print(error)
             }
-        
-            let token = UserDefaults.standard.string(forKey: "jsonwebtoken")!
-            print("Bearer \(token)")
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-            let task = session.dataTask(with: request) { data, res, err in
-                guard err == nil else { return }
-                guard let data = data else { return }
-                do {
-                    if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
-                        completion(json)
-                    }
-                } catch let error {
-                    print(error)
-                }
-            }
-            task.resume()
+        }
     }
-    
-    
 }
+
