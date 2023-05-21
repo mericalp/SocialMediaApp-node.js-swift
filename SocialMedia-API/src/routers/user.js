@@ -108,7 +108,21 @@ router.post('/users', async (req, res) => {
     }
 })
 
-// Fetch User
+/**
+ * @swagger
+ * /users:
+ *  get:
+ *      summary: Kullanıcıları getirir.
+ *      description: Kullanıcıları listeler.
+ *      responses:
+ *          201:
+ *              description: Kullanıcılar Başarıyla Listelendi.
+ *          400: 
+ *              description: Bildirim gösterilemiyor,daha sonra tekrar dene!
+ *          401:
+ *              description: Please authenticate. / Lütfen kimliğinizi doğrulayın.
+ */
+
 router.get('/users', async (req, res) => {
     try {
         const users = await User.find({})
