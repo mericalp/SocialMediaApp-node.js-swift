@@ -1,0 +1,20 @@
+# Node.js 14.x sürümünü kullanan Docker resmi Node.js imajını temel al
+FROM node:14
+
+# Docker image'ınızın çalışacağı dizini ayarlayın
+WORKDIR /src
+
+# Uygulama bağımlılıklarını kopyalayın
+COPY package*.json ./
+
+# Bağımlılıkları yükleyin
+RUN npm install
+
+# Uygulamanızı container'a kopyalayın
+COPY . .
+
+# Container'a gelen trafik için 8000 portunu açın
+EXPOSE 8000
+
+# Node.js uygulamanızı başlatın
+CMD ["npm", "run", "dev"]
