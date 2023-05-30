@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: socialmediaapp-deployment
+  labels:
+    app: socialmediaapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: socialmediaapp
+  template:
+    metadata:
+      labels:
+        app: socialmediaapp 
+    spec:
+      containers:
+      - name: nodeserver
+        image: mericalp/socialmediaapp:new
+        ports:
+        - containerPort: 8000
+        env:
+          - name: MONGODB_URL
+            value: "mongodb://mongodb-service:27017/SocialMediaAPI" # Güncellenen bağlantı URL'si
+        volumeMounts:
+          - name: mongo-data
+            mountPath: /data/db
+      volumes:
+        - name: mongo-data
+          persistentVolumeClaim:
+            claimName: mongo-pvc
