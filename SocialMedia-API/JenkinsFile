@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Clone') {
+            steps {
+                git 'https://github.com/mericalp/SocialMedia-API.git' // Projeyi GitHub'dan çekme
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                sh 'npm install' // Gerekli bağımlılıkları yükleme
+            }
+        }
+        
+        stage('deploy kubernetes (SocialMediaService.yml File') {
+            steps {
+                sh 'kubectl apply -f deployment.yml' // Projeyi Kubernetes'e dağıtma
+            }
+        }
+    }
+}
