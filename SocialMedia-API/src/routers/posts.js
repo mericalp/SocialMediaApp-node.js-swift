@@ -13,7 +13,68 @@ const upload = multer({
     }
 })
 
-// upload post
+/**
+ * @swagger
+ * /posts:
+ *   post:
+ *     summary: Post oluştur.
+ *     description: Kullanıcıların post oluşturmasını sağlar.
+ *     consumes:
+ *       - application/json 
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *            text:
+ *               type: string,
+ *               required: true
+ *              user:
+ *               type: string,
+ *               required: true
+ *              username:
+ *               type: string,
+ *               required: true
+ *             userId:
+ *               type: string,
+ *               required: true
+ *             image: 
+ *               type: string,
+ *             likes:
+ *               type: array,
+ *     responses:
+ *       201:
+ *         description: Post oluşturulduı.
+ *         schema:
+ *           type: object
+ *           properties:
+ *              text:
+ *               type: string,
+ *               required: true
+ *              user:
+ *               type: string,
+ *               required: true
+ *              username:
+ *               type: string,
+ *               required: true
+ *             userId:
+ *               type: string,
+ *               required: true
+ *             image: 
+ *               type: string,
+ *             likes:
+ *               type: array,
+ *       400:
+ *         description: "Post yüklenemedi !"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
+
 router.post('/posts', auth, async (req, res) => {
     const post = new Posts({
         ...req.body,
@@ -27,7 +88,59 @@ router.post('/posts', auth, async (req, res) => {
     }
 })
 
-// Upload post image
+
+/**
+ * @swagger
+ * /posts:
+ *   post:
+ *     summary: Gönderiye fotoğraf ekler.
+ *     description: Kullanıcıların gönderilerine fotoğrafa eklemesini sağlar.
+ *     consumes:
+ *       - application/json 
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *            text:
+ *               type: string,
+ *               required: true
+ *              user:
+ *               type: string,
+ *               required: true
+ *              username:
+ *               type: string,
+ *               required: true
+ *             userId:
+ *               type: string,
+ *               required: true
+ *             image: 
+ *               type: string,
+ *             likes:
+ *               type: array,
+ *     responses:
+ *       201:
+ *         description: Post oluşturulduı.
+ *         schema:
+ *           type: object
+ *           properties:
+ *              id:
+ *               type: string,
+ *               required: true
+ *              file:
+ *               type: string,
+ *               required: true
+ *       400:
+ *         description: "Fotoğraf  yüklenemedi !"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
+
 router.post('/uploadPostImage/:id', auth, upload.single('upload'), async (req, res) => {
     const post = await Posts.findOne({ _id: req.params.id })
     console.log(post)
@@ -43,7 +156,50 @@ router.post('/uploadPostImage/:id', auth, upload.single('upload'), async (req, r
     res.status(400).send({ error: error.message })
 })
 
-// Fetch posts
+/**
+ * @swagger
+ * /posts:
+ *   get:
+ *     summary: Gönderileri getirir.
+ *     description: Kullanıcılar gönderilerini görüntüleyebilir.
+ *     consumes:
+ *       - application/json 
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *     responses:
+ *       201:
+ *         description: Gönderilier getirildi.
+ *         schema:
+ *           type: object
+ *           properties:
+ *            text:
+ *               type: string,
+ *               required: true
+ *              user:
+ *               type: string,
+ *               required: true
+ *              username:
+ *               type: string,
+ *               required: true
+ *             userId:
+ *               type: string,
+ *               required: true
+ *             image: 
+ *               type: string,
+ *             likes:
+ *               type: array,
+ *       400:
+ *         description: "Gönderiler yüklenemedi !"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
+
+
 router.get('/posts', async (req, res) => {
     try { 
         const posts = await Posts.find({})
@@ -53,7 +209,58 @@ router.get('/posts', async (req, res) => {
     }
 })
 
-// Specific Fetch post
+/**
+ * @swagger
+ * /posts/:id:
+ *   get:
+ *     summary: Spesifik Gönderiye getirir.
+ *     description: Belirli Id'ye göre gönderiyi getirir.
+ *     consumes:
+ *       - application/json 
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *            text:
+ *               type: string,
+ *               required: true
+ *              user:
+ *               type: string,
+ *               required: true
+ *              username:
+ *               type: string,
+ *               required: true
+ *             userId:
+ *               type: string,
+ *               required: true
+ *             image: 
+ *               type: string,
+ *             likes:
+ *               type: array,
+ *     responses:
+ *       201:
+ *         description: Gönderi getirildi.
+ *         schema:
+ *           type: object
+ *           properties:
+ *              id:
+ *               type: string,
+ *               required: true
+ *              file:
+ *               type: string,
+ *               required: true
+ *       400:
+ *         description: "Gönderi getirilemedi !"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
+
 router.get('/posts/:id', async (req, res) => {
     const _id = req.params.id
 
@@ -70,7 +277,46 @@ router.get('/posts/:id', async (req, res) => {
     }
 })
 
-// Fetch post image 
+/**
+ * @swagger
+ * /posts/:id/image:
+ *   get:
+ *     summary: Spesifik Gönderiye getirir.
+ *     description: Belirli Id'ye göre gönderiyi getirir.
+ *     consumes:
+ *       - application/json 
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *            id:
+ *               type: string,
+ *               required: true
+ *     responses:
+ *       201:
+ *         description: Gönderi getirildi.
+ *         schema:
+ *           type: object
+ *           properties:
+ *              id:
+ *               type: string,
+ *               required: true
+ *              file:
+ *               type: string,
+ *               required: true
+ *       400:
+ *         description: "Görsel getirilemedi !"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
+
+
 router.get('/posts/:id/image', async (req, res) => {
     try {
         const posts = await Posts.findById(req.params.id)
@@ -86,8 +332,45 @@ router.get('/posts/:id/image', async (req, res) => {
 })
 
 
+/**
+ * @swagger
+ * /posts/:id/like:
+ *   put:
+ *     summary: Spesifik Gönderiye getirir.
+ *     description: Belirli Id'ye göre gönderiyi getirir.
+ *     consumes:
+ *       - application/json 
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *            id:
+ *               type: string,
+ *               required: true
+ *     responses:
+ *       201:
+ *         description: Gönderi getirildi.
+ *         schema:
+ *           type: object
+ *           properties:
+ *              id:
+ *               type: string,
+ *               required: true
+ *              file:
+ *               type: string,
+ *               required: true
+ *       400:
+ *         description: "Görsel getirilemedi !"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
 
-// Post like and unlike
 router.put('/posts/:id/like', auth, async (req, res) => {
     try {
         const post = await Posts.findById(req.params.id);
@@ -103,6 +386,45 @@ router.put('/posts/:id/like', auth, async (req, res) => {
         res.status(500).json(err);
     }
 });
+
+/**
+ * @swagger
+ * /posts/:id/unlike:
+ *   put:
+ *     summary: Spesifik Gönderiye getirir.
+ *     description: Belirli Id'ye göre gönderiyi getirir.
+ *     consumes:
+ *       - application/json 
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *            id:
+ *               type: string,
+ *               required: true
+ *     responses:
+ *       201:
+ *         description: Gönderi getirildi.
+ *         schema:
+ *           type: object
+ *           properties:
+ *              id:
+ *               type: string,
+ *               required: true
+ *              file:
+ *               type: string,
+ *               required: true
+ *       400:
+ *         description: "Görsel getirilemedi !"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
 
 router.put('/posts/:id/unlike', auth, async (req, res) => {
     try {
