@@ -13,6 +13,8 @@ const upload = multer({
     }
 })
 
+
+
 /**
  * @swagger
  * /user:
@@ -97,6 +99,7 @@ const upload = multer({
  *         description: "Bir Hata Belirdi !"
  */
 
+
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
 
@@ -107,6 +110,8 @@ router.post('/users', async (req, res) => {
         res.status(400).send(e)
     }
 })
+
+// Fetch User
 
 /**
  * @swagger
@@ -133,7 +138,57 @@ router.get('/users', async (req, res) => {
     }
 })
 
-// Login User
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     summary: Oturum başlatır.
+ *     description: Kullanıcı bilgilerinizle oturum açmanızı sağlar.
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string,
+ *               required: true
+ *             username:
+ *               type: string,
+ *             email:
+ *               type: string,
+ *               required: true
+ *             password:
+ *               type: string,
+ *               required: true
+ *     responses:
+ *       200:
+ *         description: Oturum açıldı.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string,
+ *               required: true
+ *             password:
+ *               type: string,
+ *               required: true
+ *             token: 
+ *               type: string,
+ *               required: true
+ *       400:
+ *         description: "Bir Hata Belirdi !"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
+
+
 router.post('/users/login',async (req, res) => { 
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
@@ -144,7 +199,44 @@ router.post('/users/login',async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ * /users/:id:
+ *   delete:
+ *     summary: Kullanıcı siler.
+ *     description: Kullanıcının ID bilgisini alarak hesabını siler.
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: string,
+ *               required: true
+ *     responses:
+ *       200:
+ *         description: Kullanıcı silindi.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               id: string,
+ *               required: true
+ *       400:
+ *         description: Kullanıcı bulunamadı!"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
+
 // Delete User
+
 router.delete('/users/:id', async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id)
@@ -158,7 +250,43 @@ router.delete('/users/:id', async (req, res) => {
    } 
 })
 
-// Fetch user for search bar 
+/**
+ * @swagger
+ * /users/:id:
+ *   get:
+ *     summary: Kullanıcı Ara..
+ *     description: Arama çubuğu yardımıyla kullanıcıları listeler.
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: string,
+ *               required: true
+ *     responses:
+ *       200:
+ *         description: Kullanıcılar listelendi.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: string,
+ *               required: true
+ *       400:
+ *         description: Kullanıcı bulunamadı!"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
+
+
 router.get('/users/:id', async (req, res) => { 
     try {
         const _id = req.params.id
@@ -174,6 +302,43 @@ router.get('/users/:id', async (req, res) => {
 })
 
 // Upload Profile Image
+
+/**
+ * @swagger
+ * /users/me/avatar:
+ *   post:
+ *     summary: Profil Fotoğrafı Yükle.
+ *     description: Kullanıcıların profil fotoğrafı yüklemesini sağlar.
+ *     consumes:
+ *       - application/json 
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             file:
+ *               type: string,
+ *               required: true
+ *     responses:
+ *       200:
+ *         description: Avatar tanımlandı.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             file:
+ *               type: string,
+ *               required: true
+ *       400:
+ *         description: "Hatalı format!"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
+
 router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => { 
     const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
 
@@ -190,7 +355,42 @@ router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) 
     res.status(400).send({error: error.message})
 })
 
-// Fetch user profile image
+/**
+ * @swagger
+ * /users/:id/avatar:
+ *   get:
+ *     summary: Kullanıcının avatarını getirir.
+ *     description: ID'si verilen kullanıcının avatarını getirir.
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: string,
+ *               required: true
+ *     responses:
+ *       200:
+ *         description: Kullanıcılar listelendi.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             avatar:
+ *               type: string,
+ *               required: true
+ *       400:
+ *         description: Kullanıcı avatarı bulunamadı !"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
+
 router.get('/users/:id/avatar', async (req, res) => {
     try {
         const user = await User.findById(req.params.id)
@@ -205,7 +405,42 @@ router.get('/users/:id/avatar', async (req, res) => {
     }
 })
 
-// Following  
+/**
+ * @swagger
+ * /users/:id/follow:
+ *   put:
+ *     summary: Kullanıcıların takip etmelerini sağlar.
+ *     description: Kullanıcıların takipçi listesini günceller.
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: string,
+ *               required: true
+ *     responses:
+ *       200:
+ *         description: Kullanıcı takip edildi.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: string,
+ *               required: true
+ *       403:
+ *         description: Kullanıcıyı zaten takip ediyorsun !"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
+
 router.put('/users/:id/follow', auth, async (req,res) => { 
     if(req.user.id != req.params.id) { 
         try { 
@@ -225,8 +460,42 @@ router.put('/users/:id/follow', auth, async (req,res) => {
     }
 })
 
+/**
+ * @swagger
+ * /users/:id/unfollow:
+ *   put:
+ *     summary: Kullanıcıların takipten çıkmalarını sağlar.
+ *     description: Kullanıcıların takipçi listesini günceller.
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: string,
+ *               required: true
+ *     responses:
+ *       200:
+ *         description: Kullanıcı takipten çıkıldı.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: string,
+ *               required: true
+ *       400:
+ *         description: Kullanıcı takipten çıkılmadı !"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
 
-// Unfollow
 router.put('/users/:id/unfollow', auth, async (req, res) => {
     if(req.user.id != req.params.id) { 
         try { 
@@ -246,7 +515,65 @@ router.put('/users/:id/unfollow', auth, async (req, res) => {
     }
 })
 
-// User update 
+/**
+ * @swagger
+ * /users/:id:
+ *   patch:
+ *     summary: Profili düzenle.
+ *     description: Kullanıcıların profilindeki belirli alanları düzenlemesini sağlar.
+ *     consumes:
+ *       - application/json 
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: İstek gövdesi.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *            name:
+ *               type: string,
+ *             email:
+ *               type: string,
+ *             password:
+ *               type: string,
+ *             age:
+ *               type: string,
+ *             bio: 
+ *               type: string,
+ *             website:
+ *               type: string,
+ *             location:
+ *               type: string,
+ *     responses:
+ *       200:
+ *         description: Güncelleme tanımlandı.
+ *         schema:
+ *           type: object
+ *           properties:
+ *              name:
+ *               type: string,
+ *             email:
+ *               type: string,
+ *             password:
+ *               type: string,
+ *             age:
+ *               type: string,
+ *             bio: 
+ *               type: string,
+ *             website:
+ *               type: string,
+ *             location:
+ *               type: string,
+ *       400:
+ *         description: "Geçersiz güncelleme !"
+ *       500:
+ *         description: "Lütfen daha sonra tekrar deneyiniz"
+ */
+
+
 router.patch('/users/:id', auth, upload.single('avatar'), async (req, res) => {
     const updates = Object.keys(req.body)
     console.log(updates)
